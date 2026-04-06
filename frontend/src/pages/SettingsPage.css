@@ -1,0 +1,57 @@
+.settings-page {
+  max-width: 960px;
+}
+
+.settings-header {
+  margin-bottom: 24px;
+}
+.settings-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.settings-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+}
+
+.settings-tab {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+.settings-tab:hover {
+  color: var(--navy);
+  background: var(--surface-hover);
+}
+.settings-tab.active {
+  color: var(--navy);
+  font-weight: 600;
+  border-bottom-color: var(--navy);
+}
+
+.settings-users-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.settings-users-header h2 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.settings-users-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}

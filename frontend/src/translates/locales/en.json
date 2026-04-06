@@ -1,0 +1,130 @@
+{
+  "lang": "en",
+  "app_name": "Support Tickets",
+  "login": {
+    "title": "Welcome",
+    "subtitle": "Sign in to your account to continue",
+    "button": "Sign In",
+    "logging_in": "Signing in...",
+    "no_account": "Don't have an account?",
+    "create_account": "Create your account now"
+  },
+  "nav": {
+    "waiting": "Waiting for Support",
+    "in_progress": "Open",
+    "completed": "Completed",
+    "settings": "Settings",
+    "new_ticket": "New Request",
+    "logout": "Logout"
+  },
+  "tickets": {
+    "priority": "Priority",
+    "created_at": "Created At",
+    "sla": "SLA",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "sla_expires_in": "Expires in",
+    "sla_expired": "SLA Breached",
+    "sla_expired_ago": "Breached",
+    "no_tickets": "No tickets found",
+    "loading": "Loading...",
+    "page": "Page",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next",
+    "days": "d",
+    "hours": "h",
+    "minutes": "min",
+    "filter_date_from": "From date",
+    "filter_date_to": "To date",
+    "filter_priority": "Priority",
+    "filter_search": "Search",
+    "all_priorities": "All",
+    "apply_filter": "Filter",
+    "clear_filter": "Clear"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "status": {
+    "open": "Open",
+    "in_progress": "In Progress",
+    "resolved": "Resolved",
+    "closed": "Closed"
+  },
+  "new_ticket": {
+    "title": "New Request",
+    "field_title": "Title",
+    "field_description": "Description",
+    "field_priority": "Priority",
+    "field_category": "Category",
+    "submit": "Open Ticket",
+    "cancel": "Cancel",
+    "success": "Ticket opened successfully!",
+    "title_placeholder": "Briefly describe the issue",
+    "description_placeholder": "Explain the issue in detail..."
+  },
+  "edit_ticket": {
+    "title": "Edit Ticket",
+    "field_status": "Status",
+    "field_priority": "Priority",
+    "field_comment": "Operator Comment",
+    "field_comment_placeholder": "Describe what was done or the reason for SLA breach...",
+    "submit": "Save",
+    "cancel": "Cancel",
+    "success": "Ticket updated successfully!"
+  },
+  "settings": {
+    "title": "Settings",
+    "sla_title": "Configure SLA",
+    "sla_subtitle": "Set resolution time per priority level",
+    "response_time": "Response Time (h)",
+    "resolution_time": "Resolution Time (h)",
+    "escalate_time": "Escalate after (h)",
+    "save": "Save",
+    "saved": "Saved successfully!"
+  },
+  "language": {
+    "label": "Language",
+    "pt": "Português",
+    "es": "Español",
+    "en": "English"
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Fill in your details to register",
+    "field_name": "Full name",
+    "field_email": "E-mail",
+    "field_cpf": "CPF",
+    "field_phone": "Phone (optional)",
+    "field_cep": "ZIP code (optional)",
+    "field_password": "Password",
+    "field_password_confirm": "Confirm password",
+    "submit": "Create account",
+    "cancel": "Cancel",
+    "success": "Account created successfully! Please log in.",
+    "already_have": "Already have an account?",
+    "no_account": "Don't have an account? Sign up",
+    "password_mismatch": "Passwords do not match.",
+    "error": "Error creating account. Please try again."
+  },
+  "users": {
+    "title": "Manage Users",
+    "create": "Create User",
+    "field_name": "Name",
+    "field_email": "E-mail",
+    "field_password": "Password",
+    "field_role": "Role",
+    "role_user": "User",
+    "role_operator": "Operator",
+    "role_admin": "Administrator",
+    "submit": "Create",
+    "cancel": "Cancel",
+    "success": "User created successfully!",
+    "error": "Error creating user."
+  }
+}

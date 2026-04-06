@@ -1,0 +1,92 @@
+{
+  "realm": "support-tickets",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 300,
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "Opens and tracks own tickets"
+      },
+      {
+        "name": "operator",
+        "description": "Handles assigned tickets"
+      },
+      {
+        "name": "admin",
+        "description": "Full access and SLA configuration"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "support-web",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost/*",
+        "http://localhost:80/*",
+        "http://localhost:3000/*",
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost",
+        "http://localhost:80/*",
+        "http://localhost:3000",
+        "http://localhost:5173"
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ]
+    },
+    {
+      "clientId": "support-api",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "support-api-secret-change-in-prod",
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": true,
+      "protocol": "openid-connect",
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "system-admin",
+      "enabled": true,
+      "email": "admin@support.local",
+      "firstName": "System",
+      "lastName": "Administrator",
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "adm@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admin"
+      ]
+    }
+  ]
+}

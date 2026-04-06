@@ -1,0 +1,30 @@
+.ticket-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+
+.filter-input,
+.filter-select {
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--cream);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: var(--transition);
+}
+.filter-input:focus,
+.filter-select:focus {
+  border-color: var(--navy);
+}
+.filter-input { min-width: 180px; }
+.filter-date { min-width: 140px; }
+.filter-select { min-width: 130px; }

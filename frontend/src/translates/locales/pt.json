@@ -1,0 +1,130 @@
+{
+  "lang": "pt",
+  "app_name": "Support Tickets",
+  "login": {
+    "title": "Bem-vindo",
+    "subtitle": "Acesse sua conta para continuar",
+    "button": "Entrar",
+    "logging_in": "Entrando...",
+    "no_account": "Não tem cadastro?",
+    "create_account": "Crie agora seu usuário"
+  },
+  "nav": {
+    "waiting": "Aguardando Atendimento",
+    "in_progress": "Em Aberto",
+    "completed": "Concluídos",
+    "settings": "Configurações",
+    "new_ticket": "Nova Solicitação",
+    "logout": "Sair"
+  },
+  "tickets": {
+    "priority": "Prioridade",
+    "created_at": "Data de Criação",
+    "sla": "SLA",
+    "actions": "Ações",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "sla_expires_in": "Expira em",
+    "sla_expired": "SLA Estourado",
+    "sla_expired_ago": "Estourado há",
+    "no_tickets": "Nenhum ticket encontrado",
+    "loading": "Carregando...",
+    "page": "Página",
+    "of": "de",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "days": "d",
+    "hours": "h",
+    "minutes": "min",
+    "filter_date_from": "Data inicial",
+    "filter_date_to": "Data final",
+    "filter_priority": "Prioridade",
+    "filter_search": "Buscar",
+    "all_priorities": "Todas",
+    "apply_filter": "Filtrar",
+    "clear_filter": "Limpar"
+  },
+  "priority": {
+    "low": "Baixa",
+    "medium": "Média",
+    "high": "Alta",
+    "critical": "Crítica"
+  },
+  "status": {
+    "open": "Aberto",
+    "in_progress": "Em Progresso",
+    "resolved": "Resolvido",
+    "closed": "Fechado"
+  },
+  "new_ticket": {
+    "title": "Nova Solicitação",
+    "field_title": "Título",
+    "field_description": "Descrição",
+    "field_priority": "Prioridade",
+    "field_category": "Categoria",
+    "submit": "Abrir Ticket",
+    "cancel": "Cancelar",
+    "success": "Ticket aberto com sucesso!",
+    "title_placeholder": "Descreva o problema brevemente",
+    "description_placeholder": "Explique o problema em detalhes..."
+  },
+  "edit_ticket": {
+    "title": "Editar Ticket",
+    "field_status": "Status",
+    "field_priority": "Prioridade",
+    "field_comment": "Comentário do Operador",
+    "field_comment_placeholder": "Informe o que foi feito ou o motivo do estouro do SLA...",
+    "submit": "Salvar",
+    "cancel": "Cancelar",
+    "success": "Ticket atualizado com sucesso!"
+  },
+  "settings": {
+    "title": "Configurações",
+    "sla_title": "Configurar SLA",
+    "sla_subtitle": "Defina o tempo de resolução por prioridade",
+    "response_time": "Tempo de Resposta (h)",
+    "resolution_time": "Tempo de Resolução (h)",
+    "escalate_time": "Escalonar após (h)",
+    "save": "Salvar",
+    "saved": "Salvo com sucesso!"
+  },
+  "language": {
+    "label": "Idioma",
+    "pt": "Português",
+    "es": "Español",
+    "en": "English"
+  },
+  "register": {
+    "title": "Criar Conta",
+    "subtitle": "Preencha os dados para se cadastrar",
+    "field_name": "Nome completo",
+    "field_email": "E-mail",
+    "field_cpf": "CPF",
+    "field_phone": "Telefone (opcional)",
+    "field_cep": "CEP (opcional)",
+    "field_password": "Senha",
+    "field_password_confirm": "Confirme a senha",
+    "submit": "Criar conta",
+    "cancel": "Cancelar",
+    "success": "Conta criada com sucesso! Faça o login.",
+    "already_have": "Já tem cadastro?",
+    "no_account": "Não tem cadastro? Crie agora",
+    "password_mismatch": "As senhas não coincidem.",
+    "error": "Erro ao criar conta. Tente novamente."
+  },
+  "users": {
+    "title": "Gerenciar Usuários",
+    "create": "Criar Usuário",
+    "field_name": "Nome",
+    "field_email": "E-mail",
+    "field_password": "Senha",
+    "field_role": "Perfil",
+    "role_user": "Usuário",
+    "role_operator": "Operador",
+    "role_admin": "Administrador",
+    "submit": "Criar",
+    "cancel": "Cancelar",
+    "success": "Usuário criado com sucesso!",
+    "error": "Erro ao criar usuário."
+  }
+}

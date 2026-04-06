@@ -1,0 +1,62 @@
+.sla-settings {
+  max-width: 900px;
+}
+
+.sla-header {
+  margin-bottom: 24px;
+}
+.sla-header h2 {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.sla-header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.sla-loading {
+  color: var(--text-muted);
+  padding: 40px;
+  text-align: center;
+}
+
+.sla-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 16px;
+}
+
+.sla-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.sla-card-critical { border-left: 4px solid var(--priority-critical); }
+.sla-card-high { border-left: 4px solid var(--priority-high); }
+.sla-card-medium { border-left: 4px solid var(--priority-medium); }
+.sla-card-low { border-left: 4px solid var(--priority-low); }
+
+.sla-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.sla-summary {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.sla-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sla-save-btn {
+  width: 100%;
+  justify-content: center;
+}

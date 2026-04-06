@@ -1,0 +1,33 @@
+.register-modal {
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.register-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  margin-top: -12px;
+}
+
+.register-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.register-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.register-error {
+  color: var(--priority-critical);
+  font-size: 13px;
+  padding: 8px 12px;
+  background: #ffeaea;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--priority-critical);
+}

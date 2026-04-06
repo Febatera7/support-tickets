@@ -1,0 +1,30 @@
+.tickets-page {
+  max-width: 1200px;
+}
+
+.tickets-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.tickets-page-title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.tickets-page-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tickets-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 20px;
+}

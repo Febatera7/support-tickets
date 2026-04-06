@@ -1,0 +1,15 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: support_frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - support_network
+
+networks:
+  support_network:
+    external: true
+    name: backend_support_network
