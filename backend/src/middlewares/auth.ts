@@ -88,3 +88,15 @@ export function requireRole(...roles: UserRole[]) {
     next();
   };
 }
+
+export function authenticateSSE(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  const token = req.query["token"] as string | undefined;
+  if (token) {
+    req.headers["authorization"] = `Bearer ${token}`;
+  }
+  void authenticate(req, res, next);
+}

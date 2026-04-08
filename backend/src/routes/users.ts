@@ -9,5 +9,6 @@ const router = Router();
 router.post("/", UserController.createUser);
 router.get("/operators", authenticate, requireRole(UserRole.ADMIN), UserController.listOperators);
 router.get("/me", authenticate, UserController.getMe);
+router.patch("/me", authenticate, UserController.updateMe);
 
 export { router as userRouter };

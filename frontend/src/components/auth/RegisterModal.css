@@ -31,3 +31,28 @@
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--priority-critical);
 }
+
+.cep-input-wrapper {
+  position: relative;
+}
+
+.cep-loading {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.register-field-error {
+  color: var(--priority-critical);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.input-readonly {
+  background: var(--surface-hover) !important;
+  color: var(--text-secondary) !important;
+  cursor: not-allowed;
+}

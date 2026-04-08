@@ -4,7 +4,8 @@ import { redisConnection } from "#src/config/redis";
 import {
   EmailValidationJobData,
   AddressEnrichmentJobData,
-  AICategorizationJobData
+  AICategorizationJobData,
+  EscalateTicketJobData
 } from "#src/types";
 import { logger } from "#src/utils/logger";
 
@@ -64,4 +65,38 @@ export async function enqueueAICategorization(
   logger.info("[Queue] AI categorization enqueued", {
     ticketId: data.ticketId
   });
+}
+
+export const escalateQueue = new Queue<EscalateTicketJobData>(
+  "ticket-escalation",
+  {
+    connection: redisConnection,
+    defaultJobOptions: {
+      attempts: 3,
+      backoff: { type: "exponential" as const, delay: 2000 },
+      removeOnComplete: { count: 100 },
+      removeOnFail: { count: 100 }
+    }
+  }
+);
+
+export async function scheduleEscalation(
+  ticketId: string,
+  currentPriority: string,
+  delayMs: number
+): Promise<void> {
+  const jobId = `escalate-${ticketId}`;
+  await escalateQueue.remove(jobId);
+  await escalateQueue.add(
+    "escalate-ticket",
+    { ticketId, currentPriority },
+    { jobId, delay: delayMs }
+  );
+  logger.info("[Queue] Escalation scheduled", { ticketId, delayMs });
+}
+
+export async function cancelEscalation(ticketId: string): Promise<void> {
+  const jobId = `escalate-${ticketId}`;
+  await escalateQueue.remove(jobId);
+  logger.info("[Queue] Escalation cancelled", { ticketId });
 }

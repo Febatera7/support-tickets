@@ -21,7 +21,6 @@
 .header-logo-img {
   height: 38px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
 }
 
 .header-right {
@@ -31,6 +30,17 @@
 }
 
 .header-user {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.header-user:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.header-user-display {
   display: flex;
   flex-direction: column;
   align-items: flex-end;

@@ -8,7 +8,6 @@ import {
   Index
 } from "typeorm";
 
-import { Notification } from "#src/entities/Notification";
 import { Ticket } from "#src/entities/Ticket";
 
 export enum UserRole {
@@ -54,14 +53,20 @@ export class User {
   @Column({ nullable: true, type: "varchar" })
   state!: string | null;
 
+  @Column({ nullable: true, type: "varchar", default: "Brasil" })
+  country!: string | null;
+
+  @Column({ nullable: true, type: "varchar" })
+  number!: string | null;
+
+  @Column({ nullable: true, type: "varchar" })
+  complement!: string | null;
+
   @Column({ type: "enum", enum: UserRole })
   role!: UserRole;
 
   @Column({ default: false, name: "email_validated" })
   emailValidated!: boolean;
-
-  @Column({ default: false, name: "address_enriched" })
-  addressEnriched!: boolean;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;
@@ -74,7 +79,4 @@ export class User {
 
   @OneToMany(() => Ticket, (ticket: Ticket) => ticket.assignedTo)
   assignedTickets!: Ticket[];
-
-  @OneToMany(() => Notification, (n: Notification) => n.admin)
-  notifications!: Notification[];
 }

@@ -68,3 +68,8 @@ export interface AICategorizationJobData {
   ticketTitle: string;
   ticketDescription: string;
 }
+
+export interface EscalateTicketJobData {
+  ticketId: string;
+  currentPriority: string;
+}

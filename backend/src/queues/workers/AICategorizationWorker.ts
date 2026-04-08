@@ -2,6 +2,7 @@ import { Worker, Job, UnrecoverableError } from "bullmq";
 
 import { AppDataSource } from "#src/config/database";
 import { redisConnection } from "#src/config/redis";
+import { SLAConfig } from "#src/entities/SLAConfig";
 import { Ticket, ProcessingStatus } from "#src/entities/Ticket";
 import { categorizeTicket } from "#src/external/AICategorizationService";
 import { publishSSEEvent } from "#src/sse/SSEManager";
@@ -53,7 +54,16 @@ async function process(job: Job<AICategorizationJobData>): Promise<void> {
 
   ticket.aiSuggestedPriority = result.suggestedPriority;
   ticket.aiSuggestedCategory = result.suggestedCategory;
+  ticket.priority = result.suggestedPriority;
   if (!ticket.category) ticket.category = result.suggestedCategory;
+
+  const slaRepo = AppDataSource.getRepository(SLAConfig);
+  const slaConfig = await slaRepo.findOne({ where: { priority: result.suggestedPriority } });
+  if (slaConfig) {
+    const d = new Date(ticket.createdAt);
+    d.setHours(d.getHours() + slaConfig.resolutionTimeHours);
+    ticket.slaDeadline = d;
+  }
   ticket.processingStatus = ProcessingStatus.PROCESSED;
   ticket.processingError = null;
   await repo.save(ticket);

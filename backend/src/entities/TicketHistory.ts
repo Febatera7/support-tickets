@@ -37,9 +37,6 @@ export class TicketHistory {
   @JoinColumn({ name: "changed_by_id" })
   changedBy!: User | null;
 
-  @Column({ nullable: true, type: "varchar", name: "changed_by_id" })
-  changedById!: string | null;
-
   @Column({ type: "enum", enum: HistoryAction })
   action!: HistoryAction;
 
@@ -48,9 +45,6 @@ export class TicketHistory {
 
   @Column({ nullable: true, type: "varchar", name: "new_value" })
   newValue!: string | null;
-
-  @Column({ nullable: true, type: "text" })
-  metadata!: string | null;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;

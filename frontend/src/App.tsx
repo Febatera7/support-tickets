@@ -6,6 +6,7 @@ import { LoginPage } from "#src/pages/LoginPage";
 import { TicketsPage } from "#src/pages/TicketsPage";
 import { NewTicketPage } from "#src/pages/NewTicketPage";
 import { SettingsPage } from "#src/pages/SettingsPage";
+import { ProfilePage } from "#src/pages/ProfilePage";
 import type { UserRole } from "#src/types";
 import { ReactNode } from "react";
 
@@ -37,6 +38,7 @@ function AppRoutes() {
       <Route path="/tickets/new" element={<Protected roles={["user"]}><NewTicketPage /></Protected>} />
       <Route path="/tickets/:tab" element={<Protected><TicketsPage /></Protected>} />
       <Route path="/settings" element={<Protected roles={["admin"]}><SettingsPage /></Protected>} />
+      <Route path="/profile" element={<Protected><ProfilePage /></Protected>} />
       <Route path="*" element={<RootRedirect />} />
     </Routes>
   );

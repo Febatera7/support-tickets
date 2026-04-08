@@ -60,20 +60,6 @@ export async function listAvailable(
   }
 }
 
-export async function getTicket(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const actor = (req as AuthenticatedRequest).user;
-    const ticket = await service.getById(req.params["id"]!, actor);
-    res.json({ status: "success", data: ticket });
-  } catch (err) {
-    next(err);
-  }
-}
-
 export async function updateStatus(
   req: Request,
   res: Response,
@@ -132,11 +118,9 @@ export async function assignTicket(
   next: NextFunction
 ): Promise<void> {
   try {
-    const actor = (req as AuthenticatedRequest).user;
     const ticket = await service.assignTicket(
       req.params["id"]!,
-      AssignTicketSchema.parse(req.body),
-      actor
+      AssignTicketSchema.parse(req.body)
     );
     res.json({ status: "success", data: ticket });
   } catch (err) {

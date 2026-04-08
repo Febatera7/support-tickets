@@ -44,11 +44,6 @@ export async function listAvailableTickets(
   return data;
 }
 
-export async function getTicket(id: string): Promise<Ticket> {
-  const { data } = await api.get<ApiResponse<Ticket>>(`/api/tickets/${id}`);
-  return data.data;
-}
-
 export async function createTicket(payload: {
   title: string;
   description: string;

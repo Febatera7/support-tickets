@@ -14,11 +14,15 @@ export const CreateUserSchema = z.object({
     .string()
     .regex(/^\+?[\d\s\-()]{10,20}$/, "Formato de telefone inválido")
     .optional(),
-  cep: z
-    .string()
-    .regex(/^\d{5}-?\d{3}$/, "Formato de CEP inválido")
-    .optional(),
-  password: z.string().min(8).max(100)
+  password: z.string().min(8).max(100),
+  cep: z.string().regex(/^\d{5}-?\d{3}$/, "Formato de CEP inválido").optional(),
+  street: z.string().max(200).trim().optional(),
+  neighborhood: z.string().max(100).trim().optional(),
+  city: z.string().max(100).trim().optional(),
+  state: z.string().max(2).trim().optional(),
+  country: z.string().max(100).trim().optional(),
+  number: z.string().max(20).trim().optional(),
+  complement: z.string().max(100).trim().optional()
 });
 
 export const CreateOperatorSchema = z.object({
@@ -52,6 +56,19 @@ export const AssignTicketSchema = z.object({
   operatorId: z.string().uuid()
 });
 
+export const UpdateMeSchema = z.object({
+  name: z.string().min(2).max(100).trim().optional(),
+  phone: z.string().regex(/^\+?[\d\s\-()]{10,20}$/, "Formato de telefone inválido").optional().nullable(),
+  cep: z.string().regex(/^\d{5}-?\d{3}$/, "Formato de CEP inválido").optional(),
+  street: z.string().max(200).trim().optional(),
+  neighborhood: z.string().max(100).trim().optional(),
+  city: z.string().max(100).trim().optional(),
+  state: z.string().max(2).trim().optional(),
+  country: z.string().max(100).trim().optional(),
+  number: z.string().max(20).trim().optional().nullable(),
+  complement: z.string().max(100).trim().optional().nullable()
+});
+
 export const UpdateSLAConfigSchema = z.object({
   responseTimeHours: z.number().int().min(1).max(720),
   resolutionTimeHours: z.number().int().min(1).max(2160),
@@ -77,6 +94,7 @@ export type CreateTicketDTO = z.infer<typeof CreateTicketSchema>;
 export type UpdateTicketStatusDTO = z.infer<typeof UpdateTicketStatusSchema>;
 export type UpdateTicketPriorityDTO = z.infer<typeof UpdateTicketPrioritySchema>;
 export type AssignTicketDTO = z.infer<typeof AssignTicketSchema>;
+export type UpdateMeDTO = z.infer<typeof UpdateMeSchema>;
 export type UpdateSLAConfigDTO = z.infer<typeof UpdateSLAConfigSchema>;
 export type TicketListQueryDTO = z.infer<typeof TicketListQuerySchema>;
 export type UpdateTicketCategoryDTO = z.infer<typeof UpdateTicketCategorySchema>;

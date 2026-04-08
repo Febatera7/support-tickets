@@ -7,7 +7,6 @@ import { getSkip } from "#src/utils/pagination";
 
 export interface CreateHistoryInput {
   ticketId: string;
-  changedById: string | null;
   action: HistoryAction;
   oldValue?: string | null;
   newValue?: string | null;
@@ -25,11 +24,9 @@ export class TicketHistoryRepository {
     return this.repo.save(
       this.repo.create({
         ticketId: input.ticketId,
-        changedById: input.changedById,
         action: input.action,
         oldValue: input.oldValue ?? null,
-        newValue: input.newValue ?? null,
-        metadata: input.metadata ?? null
+        newValue: input.newValue ?? null
       })
     );
   }

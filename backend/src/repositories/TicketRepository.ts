@@ -69,21 +69,54 @@ export class TicketRepository {
     }
   }
 
-  findPaginated(
+  async findPaginated(
     filters: TicketFilters,
-    pagination: PaginationQuery
-  ): Promise<[Ticket[], number]> {
+    pagination: PaginationQuery,
+    includeHistory = false
+  ): Promise<[(Ticket & { resolutionTimeMinutes: number | null })[], number]> {
     const qb = this.repo
       .createQueryBuilder("ticket")
       .leftJoinAndSelect("ticket.createdBy", "createdBy")
       .leftJoinAndSelect("ticket.assignedTo", "assignedTo")
+      .addSelect(
+        `CASE WHEN ticket.resolved_at IS NOT NULL
+          THEN EXTRACT(EPOCH FROM (ticket.resolved_at - ticket.created_at)) / 60
+          ELSE NULL END`,
+        "resolutionTimeMinutes"
+      )
       .skip(getSkip(pagination))
       .take(pagination.limit);
+
+    if (includeHistory) {
+      qb.leftJoinAndSelect("ticket.history", "history")
+        .leftJoinAndSelect("history.changedBy", "changedBy")
+        .addOrderBy("history.createdAt", "ASC");
+    }
 
     this.applyFilters(qb, filters);
     this.applyOrder(qb, filters.statuses ? filters.statuses[0] : filters.status);
 
-    return qb.getManyAndCount();
+    const countQb = qb.clone();
+    const count = await countQb.getCount();
+
+    const result = await qb.getRawAndEntities();
+
+    const rawByTicketId = new Map<string, Record<string, string | null>>();
+    for (const raw of result.raw as Record<string, string | null>[]) {
+      const id = raw["ticket_id"] as string;
+      if (id && !rawByTicketId.has(id)) rawByTicketId.set(id, raw);
+    }
+
+    const entities = result.entities.map((ticket) => {
+      const raw = rawByTicketId.get(ticket.id) ?? {};
+      const t = ticket as Ticket & { resolutionTimeMinutes: number | null };
+      t.resolutionTimeMinutes = raw["resolutionTimeMinutes"] !== null
+        ? Math.round(Number(raw["resolutionTimeMinutes"]))
+        : null;
+      return t;
+    });
+
+    return [entities, count];
   }
 
   async findById(id: string): Promise<(Ticket & { resolutionTimeMinutes: number | null }) | null> {

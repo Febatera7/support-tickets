@@ -76,7 +76,7 @@ Respond ONLY with a valid JSON object, no markdown, no extra text:
 {"priority":"<low|medium|high|critical>","category":"<billing|technical|account|network|hardware|software|security|other>","reasoning":"<one sentence explaining the priority choice>"}`;
 
   const completion = await groqClient.chat.completions.create({
-    model: "llama3-70b-8192",
+    model: "llama-3.3-70b-versatile",
     messages: [{ role: "user", content: prompt }],
     max_tokens: 150,
     temperature: 0.1

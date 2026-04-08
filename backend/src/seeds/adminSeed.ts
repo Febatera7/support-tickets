@@ -33,9 +33,7 @@ export async function seedAdminUser(): Promise<void> {
       cpf: null,
       phone: null,
       cep: null,
-      role: UserRole.ADMIN,
-      emailValidated: true,
-      addressEnriched: false
+      role: UserRole.ADMIN
     });
 
     logger.info(

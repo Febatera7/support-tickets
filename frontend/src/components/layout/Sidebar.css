@@ -40,7 +40,3 @@
   background: var(--navy);
   color: #fff;
 }
-
-.sidebar-link.active svg {
-  filter: brightness(0) invert(1) !important;
-}

@@ -95,3 +95,63 @@
 .ticket-table tbody tr {
   cursor: pointer;
 }
+
+.ticket-detail-assign {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.assign-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--cream);
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+}
+.assign-select:focus { border-color: var(--navy); }
+
+.assign-error {
+  color: var(--priority-critical);
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.ticket-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.ticket-history-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--border);
+}
+
+.history-action {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  text-transform: capitalize;
+}
+
+.history-values {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.history-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}

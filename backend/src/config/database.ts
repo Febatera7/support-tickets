@@ -2,7 +2,6 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 
 import { env } from "#src/config/env";
-import { Notification } from "#src/entities/Notification";
 import { SLAConfig } from "#src/entities/SLAConfig";
 import { Ticket } from "#src/entities/Ticket";
 import { TicketHistory } from "#src/entities/TicketHistory";
@@ -18,6 +17,6 @@ export const AppDataSource = new DataSource({
   database: env.POSTGRES_DB,
   synchronize: env.DB_SYNC === "true",
   logging: env.NODE_ENV === "development",
-  entities: [User, Ticket, TicketHistory, Notification, SLAConfig],
+  entities: [User, Ticket, TicketHistory, SLAConfig],
   connectTimeoutMS: 10000
 });

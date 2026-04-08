@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FcPlus } from "react-icons/fc";
 import { AppLayout } from "#src/components/layout/AppLayout";
 import { TicketTable } from "#src/components/tickets/TicketTable";
 import { TicketFiltersBar } from "#src/components/tickets/TicketFilters";
@@ -9,6 +8,7 @@ import { NewTicketModal } from "#src/components/tickets/NewTicketModal";
 import { useAuth } from "#src/context/AuthContext";
 import { useLanguage } from "#src/context/LanguageContext";
 import { setAuthToken } from "#src/services/api";
+import { useSSE } from "#src/hooks/useSSE";
 import { listTickets, listAvailableTickets, deleteTicket } from "#src/services/ticketService";
 import type { Ticket, TicketFilters } from "#src/types";
 import "#src/pages/TicketsPage.css";
@@ -68,9 +68,17 @@ export function TicketsPage() {
     }
   }, [user, tab, filters, page]);
 
+  useSSE((event) => {
+    const relevant = ["TICKET_PROCESSING_UPDATE", "PRIORITY_CHANGED", "TICKET_ASSIGNED"];
+    if (relevant.includes(event.type)) {
+      fetchTickets();
+    }
+  });
+
   useEffect(() => { setPage(1); }, [tab, filters]);
   useEffect(() => { fetchTickets(); }, [fetchTickets]);
 
+  
   useEffect(() => {
     if (user?.role === "user" && tab === "waiting") {
       navigate("/tickets/in-progress", { replace: true });
@@ -88,7 +96,6 @@ export function TicketsPage() {
   }
 
   const titleKey = TAB_TITLES[tab] ?? "nav.in_progress";
-  const isUser = user?.role === "user";
 
   return (
     <AppLayout>
@@ -96,13 +103,7 @@ export function TicketsPage() {
         <div className="tickets-page-header">
           <h1 className="tickets-page-title">{t(titleKey)}</h1>
           <div className="tickets-page-actions">
-            {isUser && (
-              <button className="btn btn-primary" onClick={() => setShowNew(true)}>
-                <FcPlus size={18} style={{ filter: "brightness(0) invert(1)" }} />
-                {t("nav.new_ticket")}
-              </button>
-            )}
-            <span className="tickets-count">{total} tickets</span>
+<span className="tickets-count">{total} tickets</span>
           </div>
         </div>
 
@@ -116,6 +117,7 @@ export function TicketsPage() {
           onPageChange={setPage}
           onEdit={setEditTicket}
           onDelete={handleDelete}
+          onUpdated={fetchTickets}
         />
       </div>
 

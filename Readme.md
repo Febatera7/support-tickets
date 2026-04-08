@@ -9,7 +9,6 @@ Sistema de gestão de tickets de suporte com triagem automática por IA, múltip
 - [Visão Geral](#visão-geral)
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação do Docker](#instalação-do-docker)
-- [Instalação do Make](#instalação-do-make)
 - [Como Rodar](#como-rodar)
 - [Acesso Inicial](#acesso-inicial)
 - [Funcionalidades](#funcionalidades)
@@ -34,8 +33,7 @@ O Support Tickets é uma plataforma completa para abertura e gestão de chamados
 
 Antes de começar, você precisa ter instalados:
 
-- **Docker** com Docker Compose V2
-- **Make**
+- **Docker** com Docker Compose **v2.20 ou superior** (verifique com `docker compose version`)
 - Uma chave de API gratuita do **Groq** — obtenha em [console.groq.com](https://console.groq.com)
 
 ---
@@ -87,53 +85,6 @@ docker compose version
 
 ---
 
-## 🔧 Instalação do Make
-
-### Windows
-
-O Make não vem instalado no Windows por padrão. Instale via **Chocolatey**:
-
-1. Abra o **PowerShell como Administrador**
-2. Instale o Chocolatey:
-   ```powershell
-   Set-ExecutionPolicy Bypass -Scope Process -Force
-   [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-   iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-   ```
-3. Instale o Make:
-   ```powershell
-   choco install make
-   ```
-4. Reinicie o PowerShell e verifique:
-   ```powershell
-   make --version
-   ```
-
-> ⚠️ **Importante no Windows:** o `make` precisa ser executado no **PowerShell** ou no **terminal do WSL2**. Se receber erro de permissão, execute o PowerShell como Administrador ou use:
-> ```powershell
-> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-> ```
-
-### macOS
-
-O Make já vem instalado no macOS. Se não estiver, instale as ferramentas de linha de comando:
-
-```bash
-xcode-select --install
-```
-
-Ou via Homebrew:
-
-```bash
-brew install make
-```
-
-### Linux
-
-```bash
-sudo apt-get install -y make
-```
-
 ---
 
 ## 🚀 Como Rodar
@@ -150,6 +101,7 @@ cd support-tickets
 ```bash
 cd backend
 cp .env.example .env
+cd ..
 ```
 
 Abra o arquivo `backend/.env` e preencha as duas chaves de API externas:
@@ -167,20 +119,18 @@ ABSTRACT_API_KEY=sua_chave_abstract_aqui
 ### 3. Instale as dependências do frontend
 
 ```bash
-cd ../frontend
+cd frontend
 npm install
 cd ..
 ```
 
-> Este passo gera o `package-lock.json` necessário para o build do Docker.
-
 ### 4. Suba a aplicação
 
 ```bash
-make start
+docker compose up -d --build --wait
 ```
 
-Na primeira execução, o Docker vai baixar as imagens e construir os containers. Aguarde até ver a mensagem de confirmação. O processo pode levar alguns minutos.
+Na primeira execução o Docker vai baixar as imagens e construir os containers. Aguarde até todos os serviços estarem saudáveis. O processo pode levar alguns minutos.
 
 ### 5. Acesse
 
@@ -202,8 +152,6 @@ O sistema cria automaticamente um usuário administrador na primeira inicializa�
 |---|---|
 | **E-mail** | `admin@support.local` |
 | **Senha** | `adm@123` |
-
-> Recomenda-se alterar a senha após o primeiro acesso em: http://localhost:8080 → Realm `support-tickets` → Users.
 
 ### Criando um usuário comum
 
@@ -260,19 +208,40 @@ O operador pode corrigir a categoria se a IA errar. A prioridade pode ser altera
 
 ## ⚙️ Comandos Disponíveis
 
+### Subir e parar
+
 | Comando | O que faz |
 |---|---|
-| `make start` | Constrói as imagens e sobe todos os serviços |
-| `make stop` | Para os containers sem apagar os dados |
-| `make restart` | Para e sobe novamente sem rebuild |
-| `make clean` | Remove containers e apaga todos os dados ⚠️ |
-| `make logs-api` | Exibe logs da API em tempo real |
-| `make logs-worker` | Exibe logs do worker de IA em tempo real |
-| `make logs-frontend` | Exibe logs do frontend em tempo real |
-| `make status` | Mostra o status de todos os containers |
+| `docker compose up -d --build --wait` | Constrói as imagens e sobe todos os serviços |
+| `docker compose up -d --wait` | Sobe novamente sem rebuild |
+| `docker compose stop` | Para os containers, preserva dados e imagens |
+| `docker compose down` | Para e remove os containers, preserva volumes e imagens |
+| `docker compose down -v` | Para, remove containers **e apaga todos os dados** ⚠️ |
 
-> ⚠️ `make clean` apaga o banco de dados, volumes e todos os dados. Use apenas para resetar o ambiente completamente.
+### Rebuild
 
+| Comando | O que faz |
+|---|---|
+| `docker compose build --no-cache api` | Reconstrói a imagem da API sem cache |
+| `docker compose build --no-cache worker` | Reconstrói a imagem do worker sem cache |
+| `docker compose build --no-cache frontend` | Reconstrói a imagem do frontend sem cache |
+
+### Logs e status
+
+| Comando | O que faz |
+|---|---|
+| `docker compose ps` | Mostra o status de todos os containers |
+| `docker compose logs -f api` | Exibe logs da API em tempo real |
+| `docker compose logs -f worker` | Exibe logs do worker de IA em tempo real |
+| `docker compose logs -f frontend` | Exibe logs do frontend em tempo real |
+
+### Limpeza
+
+Para remover completamente todos os containers, imagens e volumes do projeto:
+
+```bash
+docker compose down -v --rmi local
+```
 ---
 
 ## 🌍 Idiomas

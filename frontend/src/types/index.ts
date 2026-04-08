@@ -23,10 +23,12 @@ export interface Ticket {
   resolvedAt: string | null;
   resolutionTimeMinutes: number | null;
   operatorComment: string | null;
+  history?: TicketHistory[];
   createdAt: string;
   updatedAt: string;
   createdBy: { id: string; name: string; email: string };
   assignedTo: { id: string; name: string; email: string } | null;
+  assignedToId: string | null;
 }
 
 export interface SLAConfig {
@@ -59,4 +61,14 @@ export interface TicketFilters {
   dateTo?: string;
   page?: number;
   limit?: number;
+}
+
+export interface TicketHistory {
+  id: string;
+  ticketId: string;
+  action: string;
+  oldValue: string | null;
+  newValue: string | null;
+  createdAt: string;
+  changedBy: { id: string; name: string; email: string } | null;
 }

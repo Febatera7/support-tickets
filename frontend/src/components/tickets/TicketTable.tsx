@@ -15,6 +15,7 @@ interface Props {
   onPageChange: (page: number) => void;
   onEdit: (ticket: Ticket) => void;
   onDelete: (ticket: Ticket) => void;
+  onUpdated?: () => void;
 }
 
 export function TicketTable({
@@ -24,7 +25,8 @@ export function TicketTable({
   totalPages,
   onPageChange,
   onEdit,
-  onDelete
+  onDelete,
+  onUpdated
 }: Props) {
   const { t } = useLanguage();
   const { user } = useAuth();
@@ -150,6 +152,7 @@ export function TicketTable({
         <TicketDetailModal
           ticket={detailTicket}
           onClose={() => setDetailTicket(null)}
+          onUpdated={onUpdated}
         />
       )}
     </>

@@ -1,4 +1,3 @@
-import { NotificationType } from "#src/entities/Notification";
 import {
   Ticket,
   TicketPriority,
@@ -7,8 +6,7 @@ import {
 } from "#src/entities/Ticket";
 import { HistoryAction, TicketHistory  } from "#src/entities/TicketHistory";
 import { UserRole } from "#src/entities/User";
-import { enqueueAICategorization } from "#src/queues/producers";
-import { NotificationRepository } from "#src/repositories/NotificationRepository";
+import { enqueueAICategorization, scheduleEscalation, cancelEscalation } from "#src/queues/producers";
 import { SLAConfigRepository } from "#src/repositories/SLAConfigRepository";
 import { TicketHistoryRepository } from "#src/repositories/TicketHistoryRepository";
 import { TicketFilters, TicketRepository } from "#src/repositories/TicketRepository";
@@ -30,7 +28,6 @@ import {
 export class TicketService {
   private readonly ticketRepo = new TicketRepository();
   private readonly historyRepo = new TicketHistoryRepository();
-  private readonly notificationRepo = new NotificationRepository();
   private readonly slaRepo = new SLAConfigRepository();
   private readonly userRepo = new UserRepository();
 
@@ -66,7 +63,6 @@ export class TicketService {
 
     await this.historyRepo.create({
       ticketId: ticket.id,
-      changedById: actor.dbUserId,
       action: HistoryAction.CREATED,
       newValue: ticket.status
     });
@@ -77,6 +73,15 @@ export class TicketService {
       ticketTitle: dto.title,
       ticketDescription: dto.description
     });
+
+    const slaForEscalation = await this.slaRepo.findByPriority(priority);
+    if (slaForEscalation?.autoEscalateAfterHours) {
+      await scheduleEscalation(
+        ticket.id,
+        priority,
+        slaForEscalation.autoEscalateAfterHours * 3600000
+      );
+    }
 
     logger.info("[TicketService] Ticket created", {
       ticketId: ticket.id,
@@ -112,11 +117,10 @@ export class TicketService {
       filters.createdById = actor.dbUserId;
     }
 
-    if (!filters.status) {
-      filters.status = TicketStatus.OPEN;
-    }
-
-    const [tickets, total] = await this.ticketRepo.findPaginated(filters, pagination);
+    const isCompleted = filters.statuses
+      ? filters.statuses.every(s => s === TicketStatus.RESOLVED || s === TicketStatus.CLOSED)
+      : filters.status === TicketStatus.RESOLVED || filters.status === TicketStatus.CLOSED;
+    const [tickets, total] = await this.ticketRepo.findPaginated(filters, pagination, isCompleted);
     return buildPaginatedResponse(tickets, total, pagination);
   }
 
@@ -127,21 +131,8 @@ export class TicketService {
     const filters = this.buildFilters(query);
     filters.unassigned = true;
 
-    if (!filters.status) {
-      filters.status = TicketStatus.OPEN;
-    }
-
     const [tickets, total] = await this.ticketRepo.findPaginated(filters, pagination);
     return buildPaginatedResponse(tickets, total, pagination);
-  }
-
-  async getById(ticketId: string, actor: AuthenticatedUser): Promise<Ticket> {
-    const ticket = await this.ticketRepo.findById(ticketId);
-    if (!ticket) throw new NotFoundError("Ticket");
-    if (actor.role === UserRole.USER && ticket.createdById !== actor.dbUserId) {
-      throw new ForbiddenError("Acesso negado");
-    }
-    return ticket;
   }
 
   async updateStatus(
@@ -159,6 +150,7 @@ export class TicketService {
     ticket.status = dto.status;
     if (dto.status === TicketStatus.RESOLVED || dto.status === TicketStatus.CLOSED) {
       ticket.resolvedAt = new Date();
+      await cancelEscalation(ticketId);
     }
     if (dto.operatorComment !== undefined) {
       ticket.operatorComment = dto.operatorComment;
@@ -167,7 +159,6 @@ export class TicketService {
     const updated = await this.ticketRepo.save(ticket);
     await this.historyRepo.create({
       ticketId,
-      changedById: actor.dbUserId,
       action: HistoryAction.STATUS_CHANGED,
       oldValue: old,
       newValue: dto.status
@@ -194,21 +185,29 @@ export class TicketService {
 
     const old = ticket.priority;
     ticket.priority = dto.priority;
+    
     ticket.slaDeadline = await this.computeDeadline(dto.priority, ticket.createdAt);
 
     const updated = await this.ticketRepo.save(ticket);
+
+    const slaForNewPriority = await this.slaRepo.findByPriority(dto.priority);
+    if (slaForNewPriority?.autoEscalateAfterHours) {
+      await scheduleEscalation(
+        ticketId,
+        dto.priority,
+        slaForNewPriority.autoEscalateAfterHours * 3600000
+      );
+    } else {
+      await cancelEscalation(ticketId);
+    }
+
     await this.historyRepo.create({
       ticketId,
-      changedById: actor.dbUserId,
       action: HistoryAction.PRIORITY_CHANGED,
       oldValue: old,
       newValue: dto.priority,
       metadata: dto.reason ? JSON.stringify({ reason: dto.reason }) : null
     });
-
-    if (actor.role === UserRole.OPERATOR) {
-      await this.notifyAdmins(ticketId, actor.dbUserId, old, dto.priority, ticket.title);
-    }
 
     await publishSSEEvent({
       type: "PRIORITY_CHANGED",
@@ -223,31 +222,6 @@ export class TicketService {
 
     logger.info("[TicketService] Priority updated", { ticketId, old, new: dto.priority });
     return updated;
-  }
-
-  private async notifyAdmins(
-    ticketId: string,
-    operatorId: string,
-    old: TicketPriority,
-    next: TicketPriority,
-    title: string
-  ): Promise<void> {
-    const admins = await this.userRepo.findAllByRole(UserRole.ADMIN);
-    const operator = await this.userRepo.findById(operatorId);
-    const name = operator?.name ?? "Um operador";
-    await Promise.all(
-      admins.map((admin) =>
-        this.notificationRepo.create({
-          adminId: admin.id,
-          ticketId,
-          operatorId,
-          type: NotificationType.PRIORITY_CHANGED,
-          oldPriority: old,
-          newPriority: next,
-          message: `${name} alterou a prioridade de "${title}" de ${old} para ${next}`
-        })
-      )
-    );
   }
 
   async getHistory(
@@ -285,8 +259,7 @@ export class TicketService {
 
   async assignTicket(
     ticketId: string,
-    dto: AssignTicketDTO,
-    actor: AuthenticatedUser
+    dto: AssignTicketDTO
   ): Promise<Ticket> {
     const ticket = await this.ticketRepo.findById(ticketId);
     if (!ticket) throw new NotFoundError("Ticket");
@@ -301,7 +274,6 @@ export class TicketService {
 
     await this.historyRepo.create({
       ticketId,
-      changedById: actor.dbUserId,
       action: HistoryAction.ASSIGNED,
       newValue: dto.operatorId
     });
@@ -327,6 +299,7 @@ export class TicketService {
       if (ticket.status !== TicketStatus.OPEN) throw new ForbiddenError("Só é possível excluir tickets em aberto");
     }
 
+    await cancelEscalation(ticketId);
     await this.ticketRepo.delete(ticketId);
     logger.info("[TicketService] Ticket deleted", { ticketId, deletedBy: actor.dbUserId });
   }
@@ -342,7 +315,6 @@ export class TicketService {
 
     await this.historyRepo.create({
       ticketId,
-      changedById: actor.dbUserId,
       action: HistoryAction.ASSIGNED,
       newValue: actor.dbUserId
     });

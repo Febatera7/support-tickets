@@ -4,6 +4,7 @@ import { redisConnection } from "#src/config/redis";
 import { startAddressEnrichmentWorker } from "#src/queues/workers/AddressEnrichmentWorker";
 import { startAICategorizationWorker } from "#src/queues/workers/AICategorizationWorker";
 import { startEmailValidationWorker } from "#src/queues/workers/EmailValidationWorker";
+import { startEscalationWorker } from "#src/queues/workers/EscalationWorker";
 import { logger } from "#src/utils/logger";
 
 async function bootstrap(): Promise<void> {
@@ -32,9 +33,9 @@ async function bootstrap(): Promise<void> {
   const emailWorker = startEmailValidationWorker();
   const addressWorker = startAddressEnrichmentWorker();
   const aiWorker = startAICategorizationWorker();
-
+  const escalationWorker = startEscalationWorker();
   logger.info("[Worker] All workers running", {
-    queues: ["email-validation", "address-enrichment", "ai-categorization"]
+    queues: ["email-validation", "address-enrichment", "ai-categorization", "ticket-escalation"]
   });
 
   const shutdown = async (signal: string): Promise<void> => {
@@ -42,7 +43,8 @@ async function bootstrap(): Promise<void> {
     await Promise.all([
       emailWorker.close(),
       addressWorker.close(),
-      aiWorker.close()
+      aiWorker.close(),
+      escalationWorker.close()
     ]);
     await AppDataSource.destroy();
     await redisConnection.quit();

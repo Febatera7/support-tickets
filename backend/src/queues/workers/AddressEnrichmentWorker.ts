@@ -39,7 +39,6 @@ async function process(job: Job<AddressEnrichmentJobData>): Promise<void> {
   user.neighborhood = address.neighborhood;
   user.city = address.city;
   user.state = address.state;
-  user.addressEnriched = true;
   await repo.save(user);
 
   logger.info("[AddressWorker] Done", { userId, city: address.city });

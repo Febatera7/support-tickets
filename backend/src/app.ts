@@ -4,7 +4,6 @@ import helmet from "helmet";
 
 import { errorHandler, notFoundHandler } from "#src/middlewares/error-handler";
 import { requestLogger } from "#src/middlewares/request-logger";
-import { notificationRouter } from "#src/routes/notifications";
 import { slaRouter } from "#src/routes/sla";
 import { sseRouter } from "#src/routes/sse";
 import { ticketRouter } from "#src/routes/tickets";
@@ -53,7 +52,6 @@ export function createApp(): Application {
 
   app.use("/api/users", userRouter);
   app.use("/api/tickets", ticketRouter);
-  app.use("/api/notifications", notificationRouter);
   app.use("/api/sla", slaRouter);
   app.use("/api/events", sseRouter);
 
