@@ -42,7 +42,8 @@
     "filter_search": "Buscar",
     "all_priorities": "Todas",
     "apply_filter": "Filtrar",
-    "clear_filter": "Limpiar"
+    "clear_filter": "Limpiar",
+    "resolution_time": "Tiempo de Resolución"
   },
   "priority": {
     "low": "Baja",

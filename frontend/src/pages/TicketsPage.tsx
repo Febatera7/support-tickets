@@ -71,7 +71,7 @@ export function TicketsPage() {
   useSSE((event) => {
     const relevant = ["TICKET_PROCESSING_UPDATE", "PRIORITY_CHANGED", "TICKET_ASSIGNED"];
     if (relevant.includes(event.type)) {
-      fetchTickets();
+      setTimeout(() => { fetchTickets(); }, 500);
     }
   });
 
@@ -118,6 +118,7 @@ export function TicketsPage() {
           onEdit={setEditTicket}
           onDelete={handleDelete}
           onUpdated={fetchTickets}
+          isCompleted={tab === "completed"}
         />
       </div>
 

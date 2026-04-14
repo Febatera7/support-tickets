@@ -124,6 +124,8 @@ npm install
 cd ..
 ```
 
+> Este passo gera o `package-lock.json` necessário para o build do Docker.
+
 ### 4. Suba a aplicação
 
 ```bash
@@ -138,6 +140,7 @@ Na primeira execução o Docker vai baixar as imagens e construir os containers.
 |---|---|
 | Aplicação | http://localhost:3000 |
 | API | http://localhost:4000 |
+| Documentação (Swagger) | http://localhost:4000/docs |
 | Keycloak | http://localhost:8080 |
 
 ---
@@ -152,6 +155,8 @@ O sistema cria automaticamente um usuário administrador na primeira inicializa�
 |---|---|
 | **E-mail** | `admin@support.local` |
 | **Senha** | `adm@123` |
+
+> Recomenda-se alterar a senha após o primeiro acesso em: http://localhost:8080 → Realm `support-tickets` → Users.
 
 ### Criando um usuário comum
 
@@ -226,6 +231,8 @@ O operador pode corrigir a categoria se a IA errar. A prioridade pode ser altera
 | `docker compose build --no-cache worker` | Reconstrói a imagem do worker sem cache |
 | `docker compose build --no-cache frontend` | Reconstrói a imagem do frontend sem cache |
 
+> ⚠️ Mudanças no código do frontend exigem rebuild: `docker compose build --no-cache frontend && docker compose up -d frontend`
+
 ### Logs e status
 
 | Comando | O que faz |
@@ -242,6 +249,9 @@ Para remover completamente todos os containers, imagens e volumes do projeto:
 ```bash
 docker compose down -v --rmi local
 ```
+
+> ⚠️ Isso apaga o banco de dados e todos os dados. Use apenas para resetar o ambiente completamente.
+
 ---
 
 ## 🌍 Idiomas

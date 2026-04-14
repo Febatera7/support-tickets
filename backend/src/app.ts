@@ -1,7 +1,9 @@
 import cors from "cors";
 import express, { Application } from "express";
 import helmet from "helmet";
+import swaggerUi from "swagger-ui-express";
 
+import { swaggerSpec } from "#src/config/swagger";
 import { errorHandler, notFoundHandler } from "#src/middlewares/error-handler";
 import { requestLogger } from "#src/middlewares/request-logger";
 import { slaRouter } from "#src/routes/sla";
@@ -17,11 +19,10 @@ export function createApp(): Application {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
-          connectSrc: ["'self'"],
-          frameSrc: ["'none'"],
-          objectSrc: ["'none'"]
+          imgSrc: ["'self'", "data:"],
+          connectSrc: ["'self'"]
         }
       },
       hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
@@ -45,6 +46,11 @@ export function createApp(): Application {
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(requestLogger);
+
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: "Support Tickets API",
+    swaggerOptions: { persistAuthorization: true }
+  }));
 
   app.get("/health", (_req, res) =>
     res.json({ status: "ok", timestamp: new Date().toISOString() })

@@ -16,6 +16,7 @@ interface Props {
   onEdit: (ticket: Ticket) => void;
   onDelete: (ticket: Ticket) => void;
   onUpdated?: () => void;
+  isCompleted?: boolean;
 }
 
 export function TicketTable({
@@ -26,7 +27,8 @@ export function TicketTable({
   onPageChange,
   onEdit,
   onDelete,
-  onUpdated
+  onUpdated,
+  isCompleted = false
 }: Props) {
   const { t } = useLanguage();
   const { user } = useAuth();
@@ -62,7 +64,7 @@ export function TicketTable({
               <th>{t("tickets.priority")}</th>
               <th className="col-title">Título</th>
               <th>{t("tickets.created_at")}</th>
-              <th>{t("tickets.sla")}</th>
+              <th>{isCompleted ? t("tickets.resolution_time") : t("tickets.sla")}</th>
               <th>{t("tickets.actions")}</th>
             </tr>
           </thead>
@@ -92,7 +94,21 @@ export function TicketTable({
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </td>
                   <td>
-                    <span className={`sla-${sla.urgency}`}>{sla.label}</span>
+                    {isCompleted ? (
+                      (() => {
+                        const mins = ticket.resolutionTimeMinutes;
+                        if (mins == null) return <span className="sla-normal">—</span>;
+                        const slaDeadline = ticket.slaDeadline ? new Date(ticket.slaDeadline) : null;
+                        const resolvedAt = ticket.resolvedAt ? new Date(ticket.resolvedAt) : null;
+                        const withinSla = slaDeadline && resolvedAt ? resolvedAt <= slaDeadline : true;
+                        const h = Math.floor(mins / 60);
+                        const m = mins % 60;
+                        const label = h > 0 ? (m > 0 ? `${h}h ${m}min` : `${h}h`) : `${m}min`;
+                        return <span className={withinSla ? "sla-ok" : "sla-critical"}>{label}</span>;
+                      })()
+                    ) : (
+                      <span className={`sla-${sla.urgency}`}>{sla.label}</span>
+                    )}
                   </td>
                   <td>
                     <div

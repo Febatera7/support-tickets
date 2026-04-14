@@ -110,3 +110,12 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+.sla-ok {
+  color: var(--priority-low);
+  font-weight: 600;
+}
+
+.sla-normal {
+  color: var(--text-secondary);
+}
